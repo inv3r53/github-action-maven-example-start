@@ -8,7 +8,7 @@ on:
 
 jobs:
   is_config_only_changed:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     outputs:
       only_config: ${{ steps.initialize.outputs.configOnly }}
     steps:
@@ -30,7 +30,7 @@ jobs:
               fi
 
   prepare:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: ["is_config_only_changed"]
     steps:
       - name: Do nothing
@@ -38,7 +38,7 @@ jobs:
         run:  exit 0              
 
   blackduck_scan:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: ["is_config_only_changed"]
     steps:
       - name: Do nothing
@@ -46,7 +46,7 @@ jobs:
         run:  exit 0
 
   sonarqube:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: ["is_config_only_changed"]
     steps:
       - name: Do nothing
@@ -54,7 +54,7 @@ jobs:
         run:  exit 0
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: ["is_config_only_changed"]
     steps:
       - name: Do nothing
