@@ -30,33 +30,33 @@ jobs:
               fi
 
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
     steps:
       - name: Do nothing
-        if: ${{ needs.initialize.outputs.only_config == 'true' }}
         run:  exit 0              
 
   blackduck_scan:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
     steps:
       - name: Do nothing
-        if: ${{ needs.initialize.outputs.only_config == 'true' }}
         run:  exit 0
 
   sonarqube:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
     steps:
       - name: Do nothing
-        if: ${{ needs.initialize.outputs.only_config == 'true' }}
         run:  exit 0
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
     steps:
       - name: Do nothing
-        if: ${{ needs.initialize.outputs.only_config == 'true' }}
         run:  exit 0
