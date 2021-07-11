@@ -1,1 +1,1 @@
-Test file in config folder
+Test file in config folder - updated 1
