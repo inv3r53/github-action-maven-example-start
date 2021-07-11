@@ -28,15 +28,34 @@ jobs:
               else
                 echo "::set-output name=configOnly::false"
               fi
-
   prepare:
     runs-on: self-hosted
     needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
+    steps:
+      - name: Do nothing
+        run:  exit 0              
+
+  blackduck_scan:
+    runs-on: self-hosted
+    needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
     steps:
       - name: Do nothing
         run:  exit 0
-      - name: skip test
-        run: |
-              echo "print output"
-              echo ${{ needs.is_config_only_changed.outputs.only_config }}
 
+  sonarqube:
+    runs-on: self-hosted
+    needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
+    steps:
+      - name: Do nothing
+        run:  exit 0
+
+  build:
+    runs-on: self-hosted
+    needs: ["is_config_only_changed"]
+    if: ${{ needs.is_config_only_changed.outputs.only_config == 'true' }}
+    steps:
+      - name: Do nothing
+        run:  exit 0
