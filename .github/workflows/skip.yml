@@ -1,0 +1,62 @@
+name: Pass all mandatory checks due to config only change
+# Controls when the action will run. Triggers the workflow on push or pull request
+on:
+  pull_request:
+    branches: [ develop, master ]
+    paths:
+      - 'harness/**'
+
+jobs:
+  is_config_only_changed:
+    runs-on: self-hosted
+    outputs:
+      only_config: ${{ steps.initialize.outputs.configOnly }}
+    steps:
+      - name: Set Branch Name
+        run: echo branch_name=$(echo $GITHUB_HEAD_REF) >> $GITHUB_ENV
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{env.branch_name}}
+          fetch-depth: 0
+      - name: Set if modified files include any other files along with harness folder
+        id: initialize
+        run: |
+              nonconfig_modified_files_count=$(git diff --name-only origin/$GITHUB_BASE_REF -- . ':!harness' | wc -l)
+              if [ $nonconfig_modified_files_count -eq 0 ]; then
+                echo "::set-output name=configOnly::true"
+              else
+                echo "::set-output name=configOnly::false"
+              fi
+
+  prepare:
+    runs-on: self-hosted
+    needs: ["is_config_only_changed"]
+    steps:
+      - name: Do nothing
+        if: ${{ needs.initialize.outputs.only_config == 'true' }}
+        run:  exit 0              
+
+  blackduck_scan:
+    runs-on: self-hosted
+    needs: ["is_config_only_changed"]
+    steps:
+      - name: Do nothing
+        if: ${{ needs.initialize.outputs.only_config == 'true' }}
+        run:  exit 0
+
+  sonarqube:
+    runs-on: self-hosted
+    needs: ["is_config_only_changed"]
+    steps:
+      - name: Do nothing
+        if: ${{ needs.initialize.outputs.only_config == 'true' }}
+        run:  exit 0
+
+  build:
+    runs-on: self-hosted
+    needs: ["is_config_only_changed"]
+    steps:
+      - name: Do nothing
+        if: ${{ needs.initialize.outputs.only_config == 'true' }}
+        run:  exit 0
